@@ -49,14 +49,12 @@ def entrenar(data):
 
 	categorical_transformer = Pipeline(
 			steps=[
-				('imputer', SimpleImputer(strategy='constant', fill_value='missing')),
 				('encoder', OneHotEncoder())
 			]
 		)    
 
 	numeric_transformer = Pipeline(
 			steps=[
-				('imputer', SimpleImputer(strategy='most_frequent')),
 				('scaler', StandardScaler())
 			]
 		)
@@ -113,15 +111,15 @@ def predict(data):
 	# return predicciones
 app = FastAPI()
 
-@app.post("/train")
-def train(json):
-	df_2 = pd.read_json(json)
-	re = entrenar(df_2)
-	return {"message": "Training complete {re}".format(re)}
+@app.post("/train_endpoint")
+def train_endpoint():
+	df_2 = pd.read_json('https://raw.githubusercontent.com/camilooob/modelfastapi/main/DataSet_Entrenamiento_v2.json')
+	entrenar(df_2)
+	return {"message": "Training complete "}
 
-@app.post("/predict")
-def predict(json):
-	df_prediccion = pd.read_json(json)
-	result_predict = predict(df_prediccion)
-	return {"message": "Prediction complete {result_predict}".format(result_predict)}
+@app.post("/predict_endpoint")
+def predict_endpoint():
+	df_prediccion = pd.read_json('https://raw.githubusercontent.com/camilooob/modelfastapi/main/DataSet_Prediccion.json')
+	predict(df_prediccion)
+	return {"message": "Prediction complete "}
 
